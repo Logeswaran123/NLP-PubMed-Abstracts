@@ -7,3 +7,6 @@
 <b>Experiments:</b> TODO
 
 <b>How to run:</b> TODO
+
+## References:
+* [SkimLit](https://colab.research.google.com/github/mrdbourke/tensorflow-deep-learning/blob/main/09_SkimLit_nlp_milestone_project_2.ipynb#scrollTo=9ydUpF6cqMll)
