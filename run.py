@@ -65,6 +65,7 @@ if __name__ == '__main__':
     test_dataset = tf.data.Dataset.from_tensor_slices((test_sentences, test_labels_one_hot))
 
     # Take the TensorSliceDataset's and turn them into prefetched batches
+    # Refer: https://www.tensorflow.org/guide/data_performance#prefetching
     train_dataset = train_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
     valid_dataset = valid_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
     test_dataset = test_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
@@ -84,4 +85,22 @@ if __name__ == '__main__':
     model_1_pred_probs = model_1.predict(valid_dataset)
     model_1_results = calculate_results(y_true=val_labels_encoded, y_pred=tf.argmax(model_1_pred_probs, axis=1))
     print("\n1D Convolutional model Results:\n", model_1_results)
+    print("\n-----------------------------------------------------\n")
+
+
+    # Create model using transfer learning
+    model_2 = models.Model_2(num_classes)
+
+    # Fit the model
+    model_2_history = model_2.fit(train_dataset,
+                                steps_per_epoch=int(0.1 * len(train_dataset)),  # only fit on 10% of batches for faster training time
+                                epochs=5,
+                                validation_data=valid_dataset,
+                                validation_steps=int(0.1 * len(valid_dataset))) # only validate on 10% of batches
+    model_2.evaluate(valid_dataset)
+
+    # Predict on validation data and calculate scores
+    model_2_pred_probs = model_2.predict(valid_dataset)
+    model_2_results = calculate_results(y_true=val_labels_encoded, y_pred=tf.argmax(model_2_pred_probs, axis=1))
+    print("\nTransfer learning model Results:\n", model_2_results)
     print("\n-----------------------------------------------------\n")
