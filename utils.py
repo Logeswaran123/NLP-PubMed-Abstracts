@@ -9,6 +9,10 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_recall_f
 import tensorflow as tf
 
 
+def split_chars(text):
+    return " ".join(list(text))
+
+
 def create_tensorboard_callback(dir_name, experiment_name):
     """
     Creates a TensorBoard callback instand to store log files.
