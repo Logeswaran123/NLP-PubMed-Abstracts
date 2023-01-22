@@ -38,7 +38,7 @@ Hybrid model (token, char and position embeddings) Results:
 <br/>
 
 Following are results with model trained on 100% of dataset, <br/>
-<TODO>
+*<TODO\>*
 
 ## References:
 * [SkimLit](https://colab.research.google.com/github/mrdbourke/tensorflow-deep-learning/blob/main/09_SkimLit_nlp_milestone_project_2.ipynb#scrollTo=dDWUcMGOauy8)
