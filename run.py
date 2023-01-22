@@ -154,14 +154,60 @@ if __name__ == '__main__':
     model_4 = models.Model_4(train_sentences, train_chars, output_seq_char_len, num_classes)
 
     model_4_history = model_4.fit(train_char_token_dataset, # train on dataset of token and characters
-                              steps_per_epoch=int(0.1 * len(train_char_token_dataset)),
-                              epochs=5,
-                              validation_data=val_char_token_dataset,
-                              validation_steps=int(0.1 * len(val_char_token_dataset)))
+                                steps_per_epoch=int(0.1 * len(train_char_token_dataset)),
+                                epochs=5,
+                                validation_data=val_char_token_dataset,
+                                validation_steps=int(0.1 * len(val_char_token_dataset)))
     model_4.evaluate(val_char_token_dataset)
 
     # Predict on validation data and calculate scores
     model_4_pred_probs = model_4.predict(val_char_token_dataset)
     model_4_results = calculate_results(y_true=val_labels_encoded, y_pred=tf.argmax(model_4_pred_probs, axis=1))
     print("\nHybrid model (token and char embeddings) Results:\n", model_4_results)
+    print("\n-----------------------------------------------------\n")
+
+
+    # Create one-hot-encoded tensors of our "line_number" column 
+    train_line_numbers_one_hot = tf.one_hot(train_df["line_number"].to_numpy(), depth=15)
+    val_line_numbers_one_hot = tf.one_hot(val_df["line_number"].to_numpy(), depth=15)
+    test_line_numbers_one_hot = tf.one_hot(test_df["line_number"].to_numpy(), depth=15)
+
+    # Create one-hot-encoded tensors of our "total_lines" column 
+    train_total_lines_one_hot = tf.one_hot(train_df["total_lines"].to_numpy(), depth=20)
+    val_total_lines_one_hot = tf.one_hot(val_df["total_lines"].to_numpy(), depth=20)
+    test_total_lines_one_hot = tf.one_hot(test_df["total_lines"].to_numpy(), depth=20)
+
+    # Create training and validation datasets (all four kinds of inputs)
+    # Combine chars, tokens, line numbers, total lines into a dataset
+    train_pos_char_token_data = tf.data.Dataset.from_tensor_slices((train_line_numbers_one_hot, # line numbers
+                                                                train_total_lines_one_hot, # total lines
+                                                                train_sentences, # train tokens
+                                                                train_chars)) # train chars
+    train_pos_char_token_labels = tf.data.Dataset.from_tensor_slices(train_labels_one_hot) # train labels
+    train_pos_char_token_dataset = tf.data.Dataset.zip((train_pos_char_token_data, train_pos_char_token_labels)) # combine data and labels
+    val_pos_char_token_data = tf.data.Dataset.from_tensor_slices((val_line_numbers_one_hot,
+                                                                val_total_lines_one_hot,
+                                                                val_sentences,
+                                                                val_chars))
+    val_pos_char_token_labels = tf.data.Dataset.from_tensor_slices(val_labels_one_hot)
+    val_pos_char_token_dataset = tf.data.Dataset.zip((val_pos_char_token_data, val_pos_char_token_labels))
+
+    # Prefetch and batch train and val data
+    train_pos_char_token_dataset = train_pos_char_token_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
+    val_pos_char_token_dataset = val_pos_char_token_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
+
+    # Create Hybrid model with token, character and position embeddings
+    model_5 = models.Model_5(train_sentences, train_chars, output_seq_char_len, num_classes)
+
+    model_5_history = model_5.fit(train_pos_char_token_dataset,
+                                steps_per_epoch=int(0.1 * len(train_pos_char_token_dataset)),
+                                epochs=5,
+                                validation_data=val_pos_char_token_dataset,
+                                validation_steps=int(0.1 * len(val_pos_char_token_dataset)))
+    model_5.evaluate(val_pos_char_token_dataset)
+
+    # Predict on validation data and calculate scores
+    model_5_pred_probs = model_5.predict(val_pos_char_token_dataset)
+    model_5_results = calculate_results(y_true=val_labels_encoded, y_pred=tf.argmax(model_5_pred_probs, axis=1))
+    print("\nHybrid model (token, char and position embeddings) Results:\n", model_5_results)
     print("\n-----------------------------------------------------\n")
