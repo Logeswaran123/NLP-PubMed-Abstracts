@@ -35,7 +35,10 @@ Hybrid model (token and char embeddings) Results:
 Hybrid model (token, char and position embeddings) Results:
  {'accuracy': 85.09201641731762, 'precision': 0.8530446920261443, 'recall': 0.8509201641731762, 'f1': 0.847385312945692}
 ```
+<br/>
 
+Following are results with model trained on 100% of dataset, <br/>
+<TODO>
 
 ## References:
 * [SkimLit](https://colab.research.google.com/github/mrdbourke/tensorflow-deep-learning/blob/main/09_SkimLit_nlp_milestone_project_2.ipynb#scrollTo=dDWUcMGOauy8)
