@@ -32,11 +32,11 @@ def Create_Token_Text_Vectorizer(train_sentences):
     return text_vectorizer
 
 
-def Create_Embedding_Layer(input_dim, output_dim):
+def Create_Embedding_Layer(input_dim, output_dim, name="token_embedding"):
     embedding = layers.Embedding(input_dim=input_dim,  # length of vocabulary
                             output_dim=output_dim,  # Note: different embedding sizes result in drastically different numbers of parameters to train
                             mask_zero=True,  # Use masking to handle variable sequence lengths (save space)
-                            name="token_embedding")
+                            name=name)
     return embedding
 
 
@@ -110,13 +110,51 @@ class Model():
 
         inputs = layers.Input(shape=(1,), dtype="string")
         x = text_vectorizer(inputs)
-        x = Create_Embedding_Layer(len(text_vectorizer.get_vocabulary()), 25)(x)
+        x = Create_Embedding_Layer(len(text_vectorizer.get_vocabulary()), 25, "char_embedding")(x)
         x = layers.Conv1D(64, kernel_size=5, padding="same", activation="relu")(x)
         x = layers.GlobalMaxPool1D()(x)
         outputs = layers.Dense(num_classes, activation="softmax")(x)
         model = tf.keras.Model(inputs=inputs,
                         outputs=outputs,
                         name="model_3_conv1D_char_embedding")
+
+        # Compile model
+        model.compile(loss="categorical_crossentropy",
+                        optimizer=tf.keras.optimizers.Adam(),
+                        metrics=["accuracy"])
+        return model
+
+    def Model_4(self, train_sentences, train_chars, output_seq_char_len, num_classes):
+        """
+        Create and return a hybrid model with token and character embeddings
+        Refer Figure 1 in https://arxiv.org/pdf/1612.05251.pdf
+        """
+        token_vectorizer = Create_Token_Text_Vectorizer(train_sentences)
+
+        token_inputs = layers.Input(shape=(1,), dtype=tf.string, name="token_input")
+        x = token_vectorizer(token_inputs)
+        x = Create_Embedding_Layer(len(token_vectorizer.get_vocabulary()), 128, "token_embedding")(x)
+        x = layers.Conv1D(64, kernel_size=5, padding="same", activation="relu")(x)
+        x = layers.GlobalAveragePooling1D()(x)
+        token_outputs = layers.Dense(128, activation="relu")(x)
+        token_model = tf.keras.Model(inputs=token_inputs, outputs=token_outputs)
+
+        char_vectorizer = Create_Char_Text_Vectorizer(train_chars, output_seq_char_len)
+
+        char_inputs = layers.Input(shape=(1,), dtype="string", name="char_input")
+        x = char_vectorizer(char_inputs)
+        x = Create_Embedding_Layer(len(char_vectorizer.get_vocabulary()), 25, "char_embedding")(x)
+        char_outputs = layers.Bidirectional(layers.LSTM(25))(x)
+        char_model = tf.keras.Model(inputs=char_inputs, outputs=char_outputs)
+
+        concat = layers.Concatenate(name="hybrid")([token_model.output, char_model.output])
+        x = layers.Dropout(0.5)(concat)
+        x = layers.Dense(200, activation="relu")(x)
+        x = layers.Dropout(0.5)(x)
+        concat_outputs = layers.Dense(num_classes, activation="softmax")(x)
+        model = tf.keras.Model(inputs=[token_model.input, char_model.input],
+                            outputs=concat_outputs,
+                            name="model_4_token_and_char_embeddings")
 
         # Compile model
         model.compile(loss="categorical_crossentropy",

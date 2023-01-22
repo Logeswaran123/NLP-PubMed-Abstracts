@@ -136,3 +136,32 @@ if __name__ == '__main__':
     model_3_results = calculate_results(y_true=val_labels_encoded, y_pred=tf.argmax(model_3_pred_probs, axis=1))
     print("\n1D Convolutional model (char embeddings) Results:\n", model_3_results)
     print("\n-----------------------------------------------------\n")
+
+
+    # Combine chars and tokens into a dataset
+    train_char_token_data = tf.data.Dataset.from_tensor_slices((train_sentences, train_chars))
+    train_char_token_labels = tf.data.Dataset.from_tensor_slices(train_labels_one_hot)
+    train_char_token_dataset = tf.data.Dataset.zip((train_char_token_data, train_char_token_labels))
+    val_char_token_data = tf.data.Dataset.from_tensor_slices((val_sentences, val_chars))
+    val_char_token_labels = tf.data.Dataset.from_tensor_slices(val_labels_one_hot)
+    val_char_token_dataset = tf.data.Dataset.zip((val_char_token_data, val_char_token_labels))
+
+    # Prefetch and batch train and val data
+    train_char_token_dataset = train_char_token_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
+    val_char_token_dataset = val_char_token_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
+
+    # Create Hybrid model with token and character level embeddings
+    model_4 = models.Model_4(train_sentences, train_chars, output_seq_char_len, num_classes)
+
+    model_4_history = model_4.fit(train_char_token_dataset, # train on dataset of token and characters
+                              steps_per_epoch=int(0.1 * len(train_char_token_dataset)),
+                              epochs=5,
+                              validation_data=val_char_token_dataset,
+                              validation_steps=int(0.1 * len(val_char_token_dataset)))
+    model_4.evaluate(val_char_token_dataset)
+
+    # Predict on validation data and calculate scores
+    model_4_pred_probs = model_4.predict(val_char_token_dataset)
+    model_4_results = calculate_results(y_true=val_labels_encoded, y_pred=tf.argmax(model_4_pred_probs, axis=1))
+    print("\nHybrid model (token and char embeddings) Results:\n", model_4_results)
+    print("\n-----------------------------------------------------\n")
