@@ -29,6 +29,9 @@ Transfer learning model Results:
 1D Convolutional model (char embeddings) Results:
  {'accuracy': 67.91672183238448, 'precision': 0.6816523475097991, 'recall': 0.6791672183238449, 'f1': 0.6758935728995986}
 
+Hybrid model (token and char embeddings) Results:
+ {'accuracy': 79.8391367668476, 'precision': 0.803343397964016, 'recall': 0.7983913676684761, 'f1': 0.7969816102186146}
+
 Hybrid model (token, char and position embeddings) Results:
  {'accuracy': 85.09201641731762, 'precision': 0.8530446920261443, 'recall': 0.8509201641731762, 'f1': 0.847385312945692}
 ```
