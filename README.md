@@ -8,7 +8,7 @@ PubMed 200k RCT dataset | [Link](https://github.com/Franck-Dernoncourt/pubmed-rc
 
 ## How to run
 ```python
- python run.py -d <path to dataset>
+ python run.py --data <path to dataset>
 ```
 
 Argumets: <br/>
