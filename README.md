@@ -41,12 +41,16 @@ Following are results with model trained on 100% of dataset, <br/>
 ```
 Baseline model Results:
  {'accuracy': 74.97580533665146, 'precision': 0.7431966265737352, 'recall': 0.7497580533665146, 'f1': 0.7389570175489825}
+
 1D Convolutional model (token embeddings) Results:
  {'accuracy': 84.06262961426793, 'precision': 0.8396560920826044, 'recall': 0.8406262961426794, 'f1': 0.8392693996811378}
+
 Transfer learning model Results:
  {'accuracy': 79.89769113784045, 'precision': 0.7987512364491505, 'recall': 0.7989769113784045, 'f1': 0.7968573552912587}
+
 1D Convolutional model (char embeddings) Results:
  {'accuracy': 78.16604451818057, 'precision': 0.7849655144017162, 'recall': 0.7816604451818057, 'f1': 0.7803912162453682}
+
 Hybrid model (token and char embeddings) Results:
  {'accuracy': 84.48776441310659, 'precision': 0.8542530409852241, 'recall': 0.8448776441310659, 'f1': 0.8431915858550552}
 ```
