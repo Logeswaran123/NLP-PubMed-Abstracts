@@ -9,7 +9,7 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
 
-MAX_VOCAB_LENGTH = 68000  # Mentioned in Table 2 in https://arxiv.org/abs/1710.06071
+MAX_VOCAB_LENGTH = 331000  # 68000 for PubMed 20k dataset. 331000 for PubMed 20k dataset. Mentioned in Table 2 in https://arxiv.org/abs/1710.06071
 MAX_OUTPUT_LENGTH = 55  # covers 95 percentile of sequence lengths in dataset
 
 alphabet = string.ascii_lowercase + string.digits + string.punctuation

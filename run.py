@@ -76,10 +76,8 @@ if __name__ == '__main__':
 
     # Fit the model
     model_1_history = model_1.fit(train_dataset,
-                                steps_per_epoch=int(0.1 * len(train_dataset)),  # only fit on 10% of batches for faster training time
                                 epochs=5,
-                                validation_data=valid_dataset,
-                                validation_steps=int(0.1 * len(valid_dataset))) # only validate on 10% of batches
+                                validation_data=valid_dataset)
     model_1.evaluate(valid_dataset)
 
     # Predict on validation data and calculate scores
@@ -94,10 +92,8 @@ if __name__ == '__main__':
 
     # Fit the model
     model_2_history = model_2.fit(train_dataset,
-                                steps_per_epoch=int(0.1 * len(train_dataset)),  # only fit on 10% of batches for faster training time
                                 epochs=5,
-                                validation_data=valid_dataset,
-                                validation_steps=int(0.1 * len(valid_dataset))) # only validate on 10% of batches
+                                validation_data=valid_dataset)
     model_2.evaluate(valid_dataset)
 
     # Predict on validation data and calculate scores
@@ -125,10 +121,8 @@ if __name__ == '__main__':
 
     # Fit the model
     model_3_history = model_3.fit(train_char_dataset,
-                                steps_per_epoch=int(0.1 * len(train_char_dataset)),
                                 epochs=5,
-                                validation_data=val_char_dataset,
-                                validation_steps=int(0.1 * len(val_char_dataset)))
+                                validation_data=val_char_dataset)
     model_3.evaluate(val_char_dataset)
 
     # Predict on validation data and calculate scores
@@ -154,10 +148,8 @@ if __name__ == '__main__':
     model_4 = models.Model_4(train_sentences, train_chars, output_seq_char_len, num_classes)
 
     model_4_history = model_4.fit(train_char_token_dataset, # train on dataset of token and characters
-                                steps_per_epoch=int(0.1 * len(train_char_token_dataset)),
                                 epochs=5,
-                                validation_data=val_char_token_dataset,
-                                validation_steps=int(0.1 * len(val_char_token_dataset)))
+                                validation_data=val_char_token_dataset)
     model_4.evaluate(val_char_token_dataset)
 
     # Predict on validation data and calculate scores
@@ -200,10 +192,8 @@ if __name__ == '__main__':
     model_5 = models.Model_5(train_sentences, train_chars, output_seq_char_len, num_classes)
 
     model_5_history = model_5.fit(train_pos_char_token_dataset,
-                                steps_per_epoch=int(0.1 * len(train_pos_char_token_dataset)),
                                 epochs=5,
-                                validation_data=val_pos_char_token_dataset,
-                                validation_steps=int(0.1 * len(val_pos_char_token_dataset)))
+                                validation_data=val_pos_char_token_dataset)
     model_5.evaluate(val_pos_char_token_dataset)
 
     # Predict on validation data and calculate scores
