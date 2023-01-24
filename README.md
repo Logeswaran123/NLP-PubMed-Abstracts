@@ -15,7 +15,7 @@ Argumets: <br/>
 *<path to dataset\>* - Path to Dataset directory with train, validation and test dataset.
 
 ## Experiments
-Following are results with model trained on 10% of dataset, <br/>
+Following are test results with model trained on 10% of dataset, <br/>
 ```
 Baseline model Results:
  {'accuracy': 72.1832384482987, 'precision': 0.7186466952323352, 'recall': 0.7218323844829869, 'f1': 0.6989250353450294}
@@ -37,7 +37,7 @@ Hybrid model (token, char and position embeddings) Results:
 ```
 <br/>
 
-Following are results with model trained on 100% of dataset, <br/>
+Following are test results with model trained on 100% of dataset, <br/>
 ```
 Baseline model Results:
  {'accuracy': 74.97580533665146, 'precision': 0.7431966265737352, 'recall': 0.7497580533665146, 'f1': 0.7389570175489825}
