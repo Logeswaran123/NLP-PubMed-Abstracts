@@ -55,7 +55,7 @@ Hybrid model (token and char embeddings) Results:
  {'accuracy': 84.48776441310659, 'precision': 0.8542530409852241, 'recall': 0.8448776441310659, 'f1': 0.8431915858550552}
 
 Hybrid model (token, char and position embeddings) Results:
-<TODO>
+ {'accuracy': 87.46025162449882, 'precision': 0.8751028356756292, 'recall': 0.8746025162449882, 'f1': 0.8732769016124527}
 ```
 
 ## References:
